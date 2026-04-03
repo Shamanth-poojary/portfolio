@@ -23,7 +23,7 @@ export function Sidebar() {
           }
         });
       },
-      { threshold: 0.4 }
+      { threshold: 0.1, rootMargin: "0px 0px -40% 0px" }
     );
 
     const sections = document.querySelectorAll("section");

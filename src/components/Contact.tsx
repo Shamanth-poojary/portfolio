@@ -21,7 +21,7 @@ export function Contact() {
   }, []);
 
   return (
-    <section id="contact" className="min-h-screen py-24 px-8 lg:px-24 flex flex-col justify-center">
+    <section id="contact" className="py-20 lg:py-24 px-8 lg:px-24 flex flex-col justify-center">
       <div className="w-full max-w-7xl mx-auto" ref={ref}>
         <div className={cn("mb-12 transition-all duration-700", isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6")}>
           <div className="text-[11px] tracking-[0.12em] uppercase text-brand font-body font-medium mb-2.5">

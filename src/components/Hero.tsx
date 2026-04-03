@@ -15,7 +15,7 @@ export function Hero() {
             Hey there, I&apos;m
           </div>
           
-          <h1 className="font-display text-[clamp(52px,6vw,80px)] font-extrabold leading-[0.95] tracking-tight text-text-main opacity-0 animate-[fade-up_0.6s_0.3s_forwards]">
+          <h1 className="font-display text-[clamp(36px,10vw,80px)] font-extrabold leading-[0.95] tracking-tight text-text-main opacity-0 animate-[fade-up_0.6s_0.3s_forwards]">
             Shamanth<span className="text-brand block">Poojary.</span>
           </h1>
           
@@ -39,11 +39,11 @@ export function Hero() {
         </div>
 
         {/* Right Content / Visual */}
-        <div className="relative h-[400px] lg:h-[520px] w-full flex justify-center items-end opacity-0 animate-[fade-up_0.8s_0.5s_forwards]">
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-[52%] w-[380px] h-[380px] rounded-full border border-[rgba(232,98,26,0.12)] pointer-events-none" />
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-[52%] w-[460px] h-[460px] rounded-full border border-[rgba(232,98,26,0.12)] pointer-events-none opacity-50" />
+        <div className="relative h-[320px] sm:h-[400px] lg:h-[520px] w-full flex justify-center items-end opacity-0 animate-[fade-up_0.8s_0.5s_forwards]">
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-[52%] w-[80vw] h-[80vw] sm:w-[380px] sm:h-[380px] rounded-full border border-[rgba(232,98,26,0.12)] pointer-events-none" />
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-[52%] w-[100vw] h-[100vw] sm:w-[460px] sm:h-[460px] rounded-full border border-[rgba(232,98,26,0.12)] pointer-events-none opacity-50" />
 
-          <div className="absolute bottom-0 w-[340px] h-[460px] flex items-end justify-center pointer-events-none" style={{ background: 'radial-gradient(ellipse at 50% 80%, rgba(232,98,26,0.12) 0%, transparent 70%)' }}>
+          <div className="absolute bottom-0 w-[90vw] sm:w-[340px] h-[320px] sm:h-[460px] flex items-end justify-center pointer-events-none" style={{ background: 'radial-gradient(ellipse at 50% 80%, rgba(232,98,26,0.12) 0%, transparent 70%)' }}>
             {/* Character Placeholder */}
             <div className="relative w-[280px] h-[380px] rounded-t-[140px] rounded-b-[40px] glass-card flex flex-col items-center justify-center gap-3 overflow-hidden pointer-events-auto">
               <div className="absolute inset-0 pointer-events-none" style={{ background: 'radial-gradient(circle at 50% 30%, rgba(232,98,26,0.06) 0%, transparent 60%)' }} />

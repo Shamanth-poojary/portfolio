@@ -25,7 +25,7 @@ const SKILLS = [
 
 export function Skills() {
   return (
-    <section id="skills" className="min-h-screen py-24 px-8 lg:px-24 flex flex-col justify-center">
+    <section id="skills" className="py-20 lg:py-24 px-8 lg:px-24 flex flex-col justify-center">
       <div className="w-full max-w-7xl mx-auto">
         <div className="mb-12">
           <div className="text-[11px] tracking-[0.12em] uppercase text-brand font-body font-medium mb-2.5">

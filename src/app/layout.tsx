@@ -26,7 +26,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${fontSyne.variable} ${fontDmSans.variable} h-full antialiased`}
+      className={`${fontSyne.variable} ${fontDmSans.variable} h-full antialiased overflow-x-hidden`}
     >
       <body className="min-h-full flex relative overflow-x-hidden">
         {/* Animated Background Orbs for Glassmorphism Context */}
