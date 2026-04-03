@@ -16,7 +16,7 @@ export function Hero() {
           </div>
           
           <h1 className="font-display text-[clamp(52px,6vw,80px)] font-extrabold leading-[0.95] tracking-tight text-text-main opacity-0 animate-[fade-up_0.6s_0.3s_forwards]">
-            Noah<span className="text-brand block">Carter.</span>
+            Shamanth<span className="text-brand block">Poojary.</span>
           </h1>
           
           <p className="font-display text-[clamp(20px,2.5vw,28px)] font-medium text-text-muted mt-3 mb-5 opacity-0 animate-[fade-up_0.6s_0.4s_forwards]">
