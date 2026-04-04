@@ -14,8 +14,8 @@ const fontDmSans = DM_Sans({
 });
 
 export const metadata: Metadata = {
-  title: "Noah — Web Developer",
-  description: "Portfolio of Noah, a Full-Stack Web Developer",
+  title: "Shamanth Poojary — Portfolio",
+  description: "Portfolio of Shamanth Poojary, a Full-Stack Web Developer",
 };
 
 export default function RootLayout({

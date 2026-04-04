@@ -43,7 +43,7 @@ export function Contact() {
                 <div className="w-9 h-9 rounded-xl bg-brand-dim flex items-center justify-center text-brand shrink-0">
                   <Mail className="w-4 h-4" />
                 </div>
-                hello@noahcarter.dev
+                shamanthpoojary111@gmail.com
               </div>
               <div className="flex items-center gap-3 text-sm text-text-muted font-body">
                 <div className="w-9 h-9 rounded-xl bg-brand-dim flex items-center justify-center text-brand shrink-0">
