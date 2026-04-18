@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import useSWR from "swr";
 import { cn } from "@/lib/utils";
 import { motion, AnimatePresence } from "framer-motion";
@@ -53,6 +53,77 @@ const fetcher = (url: string) => fetch(url, { cache: 'no-store' }).then((res) =>
 
 export function Work() {
   const [isSliderView, setIsSliderView] = useState(false);
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
+
+  
+  useEffect(() => {
+    const container = scrollContainerRef.current;
+    if (!container || !isSliderView) return;
+
+    let velocity = 0;
+    let rafId: number | null = null;
+    let lastTime = 0;
+
+    const MAX_VELOCITY = 50;
+    const FRICTION = 0.92;
+    const ACCELERATION = 0.5;
+
+    const animate = (time: number) => {
+      const delta = time - lastTime;
+      lastTime = time;
+
+      velocity *= FRICTION;
+
+      if (Math.abs(velocity) < 0.05) {
+        velocity = 0;
+        rafId = null;
+        
+        // RE-ENABLE CSS SNAPPING when movement stops
+        container.style.scrollSnapType = 'x mandatory';
+        return;
+      }
+
+      container.scrollLeft += velocity * (delta / 16);
+      rafId = requestAnimationFrame(animate);
+    };
+
+    const startAnimation = () => {
+      // DISABLE CSS SNAPPING while physics are active
+      container.style.scrollSnapType = 'none'; 
+      
+      if (rafId === null) {
+        lastTime = performance.now();
+        rafId = requestAnimationFrame(animate);
+      }
+    };
+
+    const handleWheel = (e: WheelEvent) => {
+      // Allow native horizontal scroll via trackpad
+      if (Math.abs(e.deltaY) <= Math.abs(e.deltaX)) return;
+
+      const isAtStart = container.scrollLeft <= 0;
+      const isAtEnd = Math.ceil(container.scrollLeft + container.clientWidth) >= container.scrollWidth - 1;
+
+      // Allow native vertical scroll at boundaries
+      if ((e.deltaY < 0 && isAtStart) || (e.deltaY > 0 && isAtEnd)) {
+        return;
+      }
+
+      e.preventDefault();
+
+      velocity += e.deltaY * ACCELERATION;
+      velocity = Math.max(-MAX_VELOCITY, Math.min(MAX_VELOCITY, velocity));
+
+      startAnimation();
+    };
+
+    container.addEventListener("wheel", handleWheel, { passive: false });
+
+    return () => {
+      container.removeEventListener("wheel", handleWheel);
+      if (rafId) cancelAnimationFrame(rafId);
+    };
+  }, [isSliderView]);
   
   const { data: dbProjects, isLoading: loading } = useSWR("/api/projects", fetcher, {
     revalidateOnFocus: true,
@@ -66,9 +137,7 @@ export function Work() {
     }, 50);
   };
 
-  // Use Data from DB if available. Use Mock Data ONLY as a loading fallback.
   const sourceProjects = Array.isArray(dbProjects) && dbProjects.length > 0 ? dbProjects : MOCK_PROJECTS;
-  
   const hasMoreProjects = sourceProjects.length > 3;
   const displayProjects = isSliderView ? sourceProjects : sourceProjects.slice(0, 3);
 
@@ -103,11 +172,14 @@ export function Work() {
         </div>
 
         <motion.div 
+          ref={scrollContainerRef}
           layout
           className={cn(
-            "w-full transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] gap-6",
+            // Added will-change-scroll for hardware acceleration
+            "w-full transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] gap-6 will-change-[scroll-position]",
             isSliderView 
-              ? "flex overflow-x-auto snap-x snap-mandatory pt-2 pb-12 items-stretch min-h-[380px] [-ms-overflow-style:'none'] [scrollbar-width:'none'] [&::-webkit-scrollbar]:hidden" 
+              // Added touch-pan-x for better mobile trackpad support
+              ? "flex overflow-x-auto snap-x snap-mandatory pt-2 pb-12 items-stretch min-h-[380px] [-ms-overflow-style:'none'] [scrollbar-width:'none'] [&::-webkit-scrollbar]:hidden touch-pan-x" 
               : "grid grid-cols-1 md:grid-cols-3 md:grid-rows-[minmax(180px,_auto)_minmax(180px,_auto)]"
           )}
         >
@@ -133,7 +205,6 @@ export function Work() {
 
             return (
               <ProjectCard 
-                // We use _id from MongoDB if present, else fallback
                 key={project._id || `proj-${i}`} 
                 project={project} 
                 layoutType={layoutType}
@@ -245,7 +316,6 @@ function ProjectCard({
              isWide ? "w-full md:w-1/3 min-h-[140px]" : "w-full h-[180px]"
            )}
          >
-           {/* If an image was uploaded, render the image tag. Otherwise render the gradient bg and fallback icon */}
            {project.imageBase64 ? (
              <img src={project.imageBase64} alt={project.name} className="object-cover w-full h-full opacity-90 group-hover/img:scale-105 transition-transform duration-700 ease-out" />
            ) : (
