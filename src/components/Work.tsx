@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
+import useSWR from "swr";
 import { cn } from "@/lib/utils";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -48,10 +49,15 @@ const MOCK_PROJECTS = [
   }
 ];
 
+const fetcher = (url: string) => fetch(url, { cache: 'no-store' }).then((res) => res.json());
+
 export function Work() {
   const [isSliderView, setIsSliderView] = useState(false);
-  const [dbProjects, setDbProjects] = useState<any[]>([]);
-  const [loading, setLoading] = useState(true);
+  
+  const { data: dbProjects, isLoading: loading } = useSWR("/api/projects", fetcher, {
+    revalidateOnFocus: true,
+    revalidateOnReconnect: true,
+  });
 
   const toggleView = (slider: boolean) => {
     setIsSliderView(slider);
@@ -60,24 +66,8 @@ export function Work() {
     }, 50);
   };
 
-  // Fetch Projects from MongoDB
-  useEffect(() => {
-    fetch('/api/projects')
-      .then(res => res.json())
-      .then(data => {
-        if (Array.isArray(data) && data.length > 0) {
-          setDbProjects(data);
-        }
-        setLoading(false);
-      })
-      .catch(err => {
-        console.error("Failed to fetch projects, falling back to mock data.", err);
-        setLoading(false);
-      });
-  }, []);
-
-  // Use Data from DB if available, else Mock Data.
-  const sourceProjects = dbProjects.length > 0 ? dbProjects : MOCK_PROJECTS;
+  // Use Data from DB if available. Use Mock Data ONLY as a loading fallback.
+  const sourceProjects = Array.isArray(dbProjects) && dbProjects.length > 0 ? dbProjects : MOCK_PROJECTS;
   
   const hasMoreProjects = sourceProjects.length > 3;
   const displayProjects = isSliderView ? sourceProjects : sourceProjects.slice(0, 3);

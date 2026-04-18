@@ -1,29 +1,14 @@
 "use client";
 
-import { useState, useEffect } from "react";
 import Link from "next/link";
+import useSWR from "swr";
+
+const fetcher = (url: string) => fetch(url, { cache: 'no-store' }).then((res) => res.json());
 
 export default function AdminDashboard() {
-  const [projects, setProjects] = useState<any[]>([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    fetchProjects();
-  }, []);
-
-  const fetchProjects = async () => {
-    try {
-      const res = await fetch("/api/projects");
-      const data = await res.json();
-      if (Array.isArray(data)) {
-        setProjects(data);
-      }
-    } catch (err) {
-      console.error(err);
-    } finally {
-      setLoading(false);
-    }
-  };
+  const { data: projects, isLoading: loading, mutate } = useSWR("/api/projects", fetcher, {
+    revalidateOnFocus: true,
+  });
 
   const handleDelete = async (id: string) => {
     if (!window.confirm("Are you sure you want to delete this project?")) return;
@@ -31,7 +16,9 @@ export default function AdminDashboard() {
     try {
       const res = await fetch(`/api/projects/${id}`, { method: "DELETE" });
       if (res.ok) {
-        setProjects(projects.filter(p => p._id !== id));
+        if (Array.isArray(projects)) {
+          mutate(projects.filter((p: any) => p._id !== id), false);
+        }
       } else {
         alert("Failed to delete project");
       }
@@ -57,7 +44,7 @@ export default function AdminDashboard() {
         
         {loading ? (
           <div className="flex justify-center p-12">Loading Database...</div>
-        ) : projects.length === 0 ? (
+        ) : !Array.isArray(projects) || projects.length === 0 ? (
           <div className="text-center p-12 text-text-muted bg-black/20 rounded-2xl border border-white/5">
             No projects found in database. Start adding some!
           </div>

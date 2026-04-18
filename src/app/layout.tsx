@@ -26,9 +26,10 @@ export default function RootLayout({
   return (
     <html
       lang="en"
+      suppressHydrationWarning
       className={`${fontSyne.variable} ${fontDmSans.variable} h-full antialiased overflow-x-hidden`}
     >
-      <body className="min-h-full flex relative overflow-x-hidden">
+      <body className="min-h-full flex relative overflow-x-hidden" suppressHydrationWarning>
         {/* Animated Background Orbs for Glassmorphism Context */}
         <div className="fixed inset-0 pointer-events-none -z-10 bg-dark-300 overflow-hidden">
           <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] min-w-[300px] min-h-[300px] rounded-full bg-brand/10 blur-[100px] animate-pulse" />

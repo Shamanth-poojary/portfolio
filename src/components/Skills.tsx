@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
+import { motion } from "framer-motion";
 import htmlIcon from "@/icons/html.svg";
 import cssIcon from "@/icons/css.svg";
 import jsIcon from "@/icons/js.svg";
@@ -47,32 +47,16 @@ export function Skills() {
 }
 
 function SkillCard({ skill, index }: { skill: typeof SKILLS[0], index: number }) {
-  const [isVisible, setIsVisible] = useState(false);
-  const ref = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(([entry]) => {
-      if (entry.isIntersecting) {
-        setIsVisible(true);
-        observer.disconnect();
-      }
-    }, { threshold: 0.15 });
-
-    if (ref.current) observer.observe(ref.current);
-    return () => observer.disconnect();
-  }, []);
-
   return (
-    <div 
-      ref={ref}
-      className={cn(
-        "glass-card p-5 rounded-2xl cursor-default transition-all duration-300 hover:-translate-y-1 hover:border-[rgba(232,98,26,0.3)] hover:bg-surface-2",
-        isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"
-      )}
-      style={{ transitionDelay: `${index * 100}ms` }}
+    <motion.div 
+      initial={{ opacity: 0, y: 24 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-50px" }}
+      transition={{ duration: 0.5, delay: index * 0.1 }}
+      className="glass-card p-5 rounded-2xl cursor-default group transition-colors hover:-translate-y-1 hover:border-[rgba(232,98,26,0.3)] hover:bg-surface-2"
     >
       <div 
-        className="w-10 h-10 rounded-xl mb-3 flex items-center justify-center text-xl"
+        className="w-10 h-10 rounded-xl mb-3 flex items-center justify-center text-xl transition-transform group-hover:scale-110"
         style={{ background: skill.bg }}
       >
         {skill.icon}
@@ -81,14 +65,14 @@ function SkillCard({ skill, index }: { skill: typeof SKILLS[0], index: number })
         {skill.name}
       </div>
       <div className="h-[3px] bg-border-1 rounded-sm overflow-hidden">
-        <div 
-          className="h-full bg-gradient-to-r from-brand to-brand-light rounded-sm transition-all duration-1000 ease-[cubic-bezier(0.4,0,0.2,1)]"
-          style={{ 
-            width: isVisible ? `${skill.level}%` : '0%',
-            transitionDelay: `${300 + index * 100}ms`
-          }}
+        <motion.div 
+          className="h-full bg-gradient-to-r from-brand to-brand-light rounded-sm"
+          initial={{ width: "0%" }}
+          whileInView={{ width: `${skill.level}%` }}
+          viewport={{ once: true, margin: "-50px" }}
+          transition={{ duration: 1, delay: 0.3 + (index * 0.1), ease: [0.4, 0, 0.2, 1] }}
         />
       </div>
-    </div>
+    </motion.div>
   );
 }
